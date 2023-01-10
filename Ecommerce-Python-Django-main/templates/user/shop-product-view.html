@@ -1,0 +1,257 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main">
+        <section class="mt-40 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12 col-xs-12">
+                        <div class="row justify-content-center">
+                        <div class="col-lg-9 justify-content-center">
+                            <div class="product-detail accordion-detail">
+                                <div class="row mb-50">
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-gallery">
+                                        <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                        <!-- MAIN SLIDES -->
+                                        <div class="product-image-slider">
+                                            <figure >
+                                                <img  src="{{ product.image1.url }}" alt="product image">
+                                            </figure>
+                                            <figure >
+                                                <img  src="{{ product.image2.url }}" alt="product image">
+                                            </figure>
+                                            <figure >
+                                                <img  src="{{ product.image3.url }}" alt="product image">
+                                            </figure>
+                                            <figure >
+                                                <img  src="{{ product.image4.url }}" alt="product image">
+                                            </figure>
+                                        </div>
+                                        <!-- THUMBNAILS -->
+                                        <div class="slider-nav-thumbnails pl-15 pr-15">
+                                            <div><img src="{{ product.image1.url }}" alt="product image"></div>
+                                            <div><img src="{{ product.image2.url }}" alt="product image"></div>
+                                            <div><img src="{{ product.image3.url }}" alt="product image"></div>
+                                            <div><img src="{{ product.image4.url }}" alt="product image"></div>
+                                            
+                                        </div>
+                                    </div>
+                                    <!-- End Gallery -->
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-info">
+                                        <h2 class="title-detail">{{product.name}}</h2>
+                                        <div class="clearfix product-price-cover mt-10">
+                                            <div class="product-price primary-color float-left">
+                                                <ins><span class="text-brand">₹{{ product.discount_price }}</span></ins>
+                                                {% if product.discount_price < product.price %}
+                                                <ins><span class="old-price font-md ml-15">₹{{ product.price }}</span></ins>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                        <div class="short-desc mb-30">
+                                            <p>{{ product.description }}</p>
+                                        </div>
+                                        <div class="product_sort_info font-xs mb-30">
+                                            <ul>
+                                                <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year Monke Brand
+                                                    Warranty</li>
+                                                <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return
+                                                    Policy</li>
+
+                                            </ul>
+                                        </div>
+                                        <form  action="{% url 'add_to_cart' product.id %}" method="post">
+                                        {% csrf_token %}
+                                        {% if product.have_size and product.sizestockS == 0 and product.sizestockM == 0 and product.sizestockL == 0 %}
+                                        <div class="attr-detail attr-size" hidden>
+                                        {% elif  product.have_size %}
+                                        <div class="attr-detail attr-size">
+                                        {% else %}
+                                        <div class="attr-detail attr-size" hidden>
+                                        {% endif %}
+                                            <select id="select-size" class="form-select" name="size">
+                                                    <option disabled selected> -- select size -- </option>
+                                                    <option>S</option>
+                                                    <option>M</option>
+                                                    <option>L</option>                                                
+                                            </select>
+                                        </div>
+                                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                        
+                                        {% if not product.have_size and product.nonsizestock == 0 %}
+                                        <div id="addToCartDiv" class="detail-extralink mb-30" hidden>
+                                        {% else %}
+                                        <div id="addToCartDiv" class="detail-extralink mb-30">
+                                        {% endif %}
+                                            <div class="detail-qty border radius">
+                                                <a style="bottom: 0;" onclick="quantityLimitDown()"><i class="fi-rs-angle-small-down"></i></a>
+                                                <span class="qty-val" id="spanQuantity">1</span>
+                                                <a style="top: 0;" onclick="quantityLimitUp()"><i class="fi-rs-angle-small-up"></i></a>
+                                                <input id="itemQuantity" type="hidden"  name="quantity"></input>
+                                            </div>
+                                            <script>
+                                                function copy(){
+                                                    document.getElementById("itemQuantity").value = document.getElementById("spanQuantity").innerHTML;
+                                                }
+
+                                                function quantityLimitUp(){
+                                                    var limit = parseInt(document.getElementById("spanQuantity").innerHTML);
+                                                    var span = document.getElementById('spanQuantity');
+                                                    if (limit >= 10) {
+                                                        console.log(limit);
+                                                            span.innerHTML = '10';
+                                                    }
+                                                    else{
+                                                        limit = limit+1;
+                                                        span.innerHTML = limit.toString();
+                                                    }
+                                                }
+
+                                                function quantityLimitDown(){
+                                                    var limit = parseInt(document.getElementById("spanQuantity").innerHTML);
+                                                    var span = document.getElementById('spanQuantity');
+                                                    if (limit <= 1) {
+                                                        console.log(limit);
+                                                            span.innerHTML = '1';
+                                                    }
+                                                    else{
+                                                        limit = limit-1;
+                                                        span.innerHTML = limit.toString();
+                                                    }
+                                                }
+                                            </script>
+                                            <div class="product-extra-link2">
+                                                {% if product.have_size %}
+                                                <button onclick="copy()" id="submitbtn" disabled="disabled" type="submit" class="button button-add-to-cart">Add to cart</button>
+                                                {% else %}
+                                                <button onclick="copy()" id="submitbtn" type="submit" class="button button-add-to-cart">Add to cart</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        </form>
+                                        {% if messages %}
+                                        <div class="messages row justify-content-start text-center mt-10">
+                                        {% for message in messages %}
+                                        <div class="alert alert-info {{ message.tags }} col-12" role="alert">
+                                        {{ message }}
+                                        </div>
+                                        {% endfor %}
+                                        </div>
+                                        {% endif %}
+                                        <div id="availability">
+                                        <ul class="product-meta font-xs color-grey mt-0">
+                                        {% if not product.have_size and product.nonsizestock == 0 %}
+                                        <li>Availability:<span class="in-stock text-danger ml-5">Item Out of Stock</span></li>
+                                        {% elif not product.have_size and product.nonsizestock <= 10 %}
+                                        <li>Availability:<span class="in-stock text-danger ml-5">Only {{product.nonsizestock}} Items In Stock</span></li>
+                                        {% elif not product.have_size and product.nonsizestock != 0 %}
+                                        <li>Availability:<span class="in-stock text-success ml-5">Items In Stock</span></li>
+                                        {% elif  product.have_size and product.sizestockS == 0 and product.sizestockM == 0 and product.sizestockL == 0 %}
+                                        <li>Availability:<span class="in-stock text-danger ml-5">Items Out of Stock</span></li>
+                                        {% endif %}
+                                        </ul>
+                                        </div>
+                                    </div>
+                                    <!-- Detail Info -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+            const availability       = document.getElementById('availability')
+            const addToCartDiv       = document.getElementById('addToCartDiv')
+
+            $("#select-size").change(function () {
+                if ($('#submitbtn').is(':disabled')) {
+                    $('#submitbtn').removeAttr('disabled');
+                }
+                const size = $(this).val();  // get the selected subject ID from the HTML dropdown list 
+                $.ajax({                       // initialize an AJAX request
+                    type: "POST",
+                    url: '{% url "get_size_info" %}',
+                    data: {
+                        'size': size,       // add the country id to the POST parameters
+                        'id': {{product.id}},       // add the country id to the POST parameters
+                        'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
+                    },
+                    success: function (sizeStock) {   // `data` is from `get_topics_ajax` view function
+                        console.log(sizeStock.sizeStock)
+                        if (sizeStock.sizeStock == 0){
+                            addToCartDiv.style.display = 'none'
+                            availability.innerHTML = ""
+                            availability.innerHTML += `
+                            <ul class="product-meta font-xs color-grey mt-0">
+                                <li>Availability:<span class="in-stock text-danger ml-5">Item Out of Stock</span></li>
+                            </ul>
+                            `
+                        } else if(sizeStock.sizeStock <= 10){
+                            addToCartDiv.style.display = 'block'
+                            availability.innerHTML = ""
+                            if(size == 'S'){
+                            availability.innerHTML += `
+                            <ul class="product-meta font-xs color-grey mt-0">
+                                <li>Availability:<span class="in-stock text-danger ml-5">Only {{product.sizestockS}} Items In Stock</span></li>
+                            </ul>
+                            `} else if(size == 'M'){
+                                availability.innerHTML += `
+                                <ul class="product-meta font-xs color-grey mt-0">
+                                    <li>Availability:<span class="in-stock text-danger ml-5">Only {{product.sizestockM}} Items In Stock</span></li>
+                                </ul>
+                            `} else if(size == 'L'){
+                                availability.innerHTML += `
+                                <ul class="product-meta font-xs color-grey mt-0">
+                                    <li>Availability:<span class="in-stock text-danger ml-5">Only {{product.sizestockL}} Items In Stock</span></li>
+                                </ul>
+                            `}
+                        } else {
+                            addToCartDiv.style.display = 'block'
+                            availability.innerHTML = ""
+                            availability.innerHTML += `
+                                <ul class="product-meta font-xs color-grey mt-0">
+                                    <li>Availability:<span class="in-stock text-success ml-5">Items In Stock</span></li>
+                                </ul>
+                            `
+                        }
+                    }
+                });
+            });
+    </script>
+    <style>
+        #id_work_days{
+            height: 40px;
+            border: none;
+            overflow: hidden;
+          }
+          #id_work_days::-moz-focus-inner {
+            border: 0;
+          }
+          #id_work_days:focus {
+            outline: none;
+          }
+          #id_work_days option{
+            width: 40px;
+            font-size: 0.8em;
+            padding: 10px 0;
+            text-align: center;
+            margin-right: 20px;
+            display: inline-block;
+            cursor: pointer;
+            border:1px solid #046963;
+            border-radius: 5px;
+            color: #088178;
+          }
+          select:active, select:hover {
+            outline-color: red
+          }
+        </style>
+    {% endblock %}
+    

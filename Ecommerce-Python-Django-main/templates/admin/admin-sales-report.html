@@ -1,0 +1,110 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Sales Report </h2>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <form action="{% url 'admin_sales_report' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-3 pt-10">
+                        <label for="startDate">Start Date : </label>
+                        <input type="date" id="startDate" name="startDate" value="{{ startDate }}">
+                    </div>
+                    <div class="col-3 pt-10">
+                        <label class="ml-30" for="endDate">End Date : </label>
+                        <input type="date" id="endDate" name="endDate" value="{{ endDate }}">
+                    </div>
+                    <div class="col-1">
+                        <button type="submit" class="btn btn-outline-primary rounded font-sm">Show</button>
+                    </div>
+                    <div class="col-1">
+                    </div>
+                    <div class="col-4">
+                        <a onclick="exportSalesReportCSV()" class="ml-20 btn btn-md rounded font-sm">Export As CSV</a>
+                        <a onclick="exportSalesReportPDF()" class="ml-20 btn btn-md rounded font-sm">Export As PDF</a>
+                    </div>
+                </div>
+            </form>
+        </header> <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Order Id</th>
+                            <th scope="col">Billing Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in orders %}
+                        <tr>
+                            <td>{{ o.id }}</td>
+                            <td><b>{{ o.user.first_name}} {{ o.user.last_name }}</b></td>
+                            <td>{{ o.user.email }}</td>
+                            <td>₹{{ o.total }}</td>
+                            {% if o.payment.status == 'Confirmed' %}
+                            <td><span class="badge rounded-pill alert-info">{{ o.payment.status }}</span></td>
+                            {% else %}
+                            <td><span class="badge rounded-pill alert-success">{{ o.payment.status }}</span></td>
+                            {% endif %}
+                            {% if o.payment.method == 'COD' %}
+                            <td>Cash On Delivery</td>
+                            {% elif o.payment.method == 'RZP' %}
+                            <td>Razor Pay</td>
+                            {% else %}
+                            <td>PayPal</td>
+                            {% endif %}
+                            <td>{{ o.date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div> <!-- table-responsive //end -->
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {% if orders.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ orders.previous_page_number }}"><i
+                            class="material-icons md-chevron_left"></i></a></li>
+                {% endif %}
+                {% if orders.has_next %}
+                <li class="page-item active"><a class="page-link" href="#">{{ orders.number }}</a></li>
+                <li class="page-item"><a class="page-link dot">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">{{ orders.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}"><i
+                            class="material-icons md-chevron_right"></i></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</section>
+
+<script>
+    function exportSalesReportCSV(){
+        startDate = document.getElementById("startDate").value
+        endDate = document.getElementById("endDate").value
+        window.location.href = "admin_export_sales_reportCSV/"+startDate+"/"+endDate
+    }
+    function exportSalesReportPDF(){
+        startDate = document.getElementById("startDate").value
+        endDate = document.getElementById("endDate").value
+        window.location.href = "admin_export_sales_reportPDF/"+startDate+"/"+endDate
+    }
+</script>
+
+{% endblock %}

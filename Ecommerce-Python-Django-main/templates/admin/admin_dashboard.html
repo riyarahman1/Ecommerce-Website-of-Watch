@@ -1,0 +1,265 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Dashboard </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-primary-light"><i
+                            class="text-primary material-icons md-monetization_on"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Revenue</h6>
+                        <span>₹{{revenue|floatformat:2}}</span>
+                        <span class="text-sm">
+                            Shipping fees are not included
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-success-light"><i
+                            class="text-success material-icons md-local_shipping"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Orders</h6> <span>{{order_count}}</span>
+                        <span class="text-sm">
+                            Excluding orders in transit
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-warning-light"><i
+                            class="text-warning material-icons md-qr_code"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Products</h6> <span>{{product_count}}</span>
+                        <span class="text-sm">
+                            In {{category_count}} Categories
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-info-light"><i
+                            class="text-info material-icons md-shopping_basket"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Monthly Earning</h6> <span>₹{{cm_revenue|floatformat:2}}</span>
+                        <span class="text-sm">
+                            Based in your local time.
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-7 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Delivered Order Statistics</h5>
+                    <canvas id="myChart1" height="124px"></canvas>
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Revenue Based on Payment Methods</h5>
+                    <canvas id="myChart3" height="180"></canvas>
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">All Time Revenue Per Month </h5>
+                    <canvas id="myChart6" height="124px"></canvas>
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Revenue from each Category</h5>
+                    <canvas id="myChart5" height="180"></canvas>
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-7 col-lg-7">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Category Orders Delivered </h5>
+                    <canvas id="myChart4" height="124px"></canvas>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+<script type="text/javascript">
+    var ctx = document.getElementById('myChart1').getContext('2d');
+    var myChart1 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['cod ', 'razorpay', 'Paypal'],
+            datasets: [{
+                label: '',
+                data: ['{{cod_order_count}}', '{{pyp_order_count}}', '{{rzp_order_count}}'],
+                backgroundColor: [
+                    '#FFE15D',
+                    '#F49D1A',
+                    '#DC3535',
+
+                ],
+                borderWidth: 1,
+                borderColor: '#FBFACD',
+                hoverBorderWidth: 1,
+                hoverBorderColor: '#497174'
+            }]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1
+
+                    }
+                }]
+            }
+        }
+    })
+</script>
+
+<script>
+    var ctx = document.getElementById('myChart3').getContext('2d');
+    var myChart3 = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cash On Delivery', 'Razor Pay', 'Paypal'],
+            datasets: [{
+                label: 'TOTAL SALES',
+                data: ['{{cod_sum.total__sum|floatformat:2}}', '{{rzp_sum.total__sum|floatformat:2}}', '{{pyp_sum.total__sum|floatformat:2}}'],
+
+                //backgroundColor:'green',
+                backgroundColor: [
+                    '#FFE15D',
+                    '#F49D1A',
+                    '#DC3535',
+
+                ],
+                borderWidth: 1,
+                borderColor: '#FBFACD',
+                hoverBorderWidth: 1,
+                hoverBorderColor: '#497174'
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: '',
+                fontSize: 25
+            },
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontColor: '#000'
+                }
+            },
+            layout: {
+                padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0
+                }
+            },
+            tooltips: {
+                enabled: true
+            }
+        }
+    });
+</script>
+
+
+
+<script>
+    var ctx = document.getElementById('myChart6').getContext('2d');
+    var myChart6 = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Revenue Per Month',
+                data: ['{{monthly_revenue.1}}', '{{monthly_revenue.2}}', '{{monthly_revenue.3}}', '{{monthly_revenue.4}}', '{{monthly_revenue.5}}', '{{monthly_revenue.6}}', '{{monthly_revenue.7}}', '{{monthly_revenue.8}}','{{monthly_revenue.9}}', '{{monthly_revenue.10}}', '{{monthly_revenue.11}}', '{{monthly_revenue.12}}'],
+
+                //backgroundColor:'green',
+                backgroundColor: [
+                '#FFE15D',
+                '#F49D1A',
+                '#DC3535',
+                '#FFE15D',
+                '#F49D1A',
+                '#DC3535',
+                '#FFE15D',
+                '#F49D1A',
+                '#DC3535',
+                '#FFE15D',
+                '#F49D1A',
+                '#DC3535',
+                ],
+                borderWidth: 1,
+                borderColor: '#FBFACD',
+                hoverBorderWidth: 1,
+                hoverBorderColor: '#497174'
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: '',
+                fontSize: 25
+            },
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontColor: '#000'
+                }
+            },
+            layout: {
+                padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0
+                }
+            },
+            tooltips: {
+                enabled: true
+            }
+        }
+    });
+</script>
+
+{% endblock %}

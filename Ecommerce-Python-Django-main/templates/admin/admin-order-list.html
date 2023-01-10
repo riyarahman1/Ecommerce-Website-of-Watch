@@ -1,0 +1,93 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Order List </h2>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <form action="{% url 'admin_order_list' %}" method="post">
+                {% csrf_token %}
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6">
+                        <input type="text" placeholder="Search" name="search" class="form-control">
+                    </div>
+                    <div class="col-lg-4 col-md-6 mt-5">
+                        <button type="submit"
+                            class="btn btn-md rounded font-sm hover-up mr-5 align-item-end">Search</button>
+                    </div>
+                </div>
+            </form>
+        </header>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date</th>
+                            <th scope="col" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in orders %}
+                        <tr>
+                            <td>#{{o.id}}</td>
+                            <td><b>{{o.user.first_name}}&nbsp;{{o.user.last_name}}</b></td>
+                            <td>{{o.user.email}}</td>
+                            <td>₹{{o.total}}</td>
+                            {% if o.status == 'Confirmed' %}
+                            <td><span class="badge rounded-pill alert-primary">{{o.status}}</span></td>
+                            {% elif o.status == 'Shipped' %}
+                            <td><span class="badge rounded-pill alert-secondary">{{o.status}}</span></td>
+                            {% elif o.status == 'Out for delivery' %}
+                            <td><span class="badge rounded-pill alert-info">{{o.status}}</span></td>
+                            {% elif o.status == 'Delivered' %}
+                            <td><span class="badge rounded-pill alert-success">{{o.status}}</span></td>
+                            {% elif o.status == 'Cancelled' %}
+                            <td><span class="badge rounded-pill alert-danger">{{o.status}}</span></td>
+                            {% elif o.status == 'Returned' %}
+                            <td><span class="badge rounded-pill alert-warning">{{o.status}}</span></td>
+                            {% endif %}
+                            <td>{{o.date}}</td>
+                            <td class="text-center">
+                                <a href="{% url 'admin_order_details' o.id %}"
+                                    class="btn btn-outline-primary font-sm">View Detail</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div> <!-- table-responsive //end -->
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+    <div class="pagination-area mt-30 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                {% if orders.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ orders.previous_page_number }}"><i
+                            class="material-icons md-chevron_left"></i></a></li>
+                {% endif %}
+                {% if orders.has_next %}
+                <li class="page-item active"><a class="page-link" href="#">{{ orders.number }}</a></li>
+                <li class="page-item"><a class="page-link dot">...</a></li>
+                <li class="page-item"><a class="page-link" href="#">{{ orders.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ orders.next_page_number }}"><i
+                            class="material-icons md-chevron_right"></i></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</section>
+</main>
+
+{% endblock %}

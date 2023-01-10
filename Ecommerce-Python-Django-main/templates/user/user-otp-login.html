@@ -1,0 +1,129 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:26:06 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Urban Monkey® | Streetwear Clothing Brand.</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "user/assets/imgs/theme/favicon.svg"%}">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static "user/assets/css/main.css"%}">
+</head>
+
+<body>
+    <header class="header-area header-style-4 header-height-2">
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="{% url 'index' %}"><img src="{% static "user/assets/imgs/theme/logo.svg"%}" alt="logo"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none mt-5 ">
+                        <a href="index.html"><img src="{% static "user/assets/imgs/theme/logo.svg"%}" alt="logo"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <section class="pt-100 pb-40">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-5 ">
+                                <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1 text-center">
+                                            <h4 class="mb-30">Please Enter OTP</h4>
+                                        </div>
+                                        <form action="{% url 'user_otp_login'%}" method="post">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <input type="text" required="" name="phone_number" value="{{ phone_number }}" readonly>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" required="" name="otp" placeholder="OTP Number">
+                                            </div>
+                                            <div class="form-group text-center">
+                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Verify</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                    {% if messages %}
+                    <div class="messages row justify-content-center text-center  mt-20">
+                        {% for message in messages %}
+                        <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                        </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor JS-->
+    <script src="{% static "user/assets/js/vendor/modernizr-3.6.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/jquery-3.6.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/jquery-migrate-3.3.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/bootstrap.bundle.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/slick.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.syotimer.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/wow.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery-ui.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/perfect-scrollbar.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/magnific-popup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/select2.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/waypoints.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/counterup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.countdown.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/images-loaded.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/isotope.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/scrollup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.vticker-min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.theia.sticky.js"%}"></script>
+    <!-- Template  JS -->
+    <script src="{% static "user/assets/js/main.js"%}"></script>
+</body>
+
+
+</html>

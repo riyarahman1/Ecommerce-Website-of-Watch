@@ -1,0 +1,51 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+        <section class="content-main">
+            <div class="row">
+                <form action="{% url 'admin_edit_coupon' coupon.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mt-40 justify-content-center">
+                <div class="col-12">
+                <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content-header">
+                        <h2 class="content-title ml-5">Edit Coupon</h2>
+                    </div>
+                    <div class="card mb-4">
+                        
+                        <div class="card-body align-item-end">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Coupon Code</label>
+                                    <input type="text" class="form-control" name="code" placeholder="Coupon Code" value='{{coupon.code}}'>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Percentage</label>
+                                    <input type="text" class="form-control" name="percentage" placeholder="Discount Percentage" value='{{coupon.percentage}}'>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="btn btn-md rounded font-sm hover-up mr-5">Save Coupon</button>
+                                </div>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+            </div>
+            </div>
+            
+            </form>
+            </div>
+            {% if messages %}
+                <div class="messages row justify-content-center text-center">
+                    {% for message in messages %}
+                    <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+{% endblock %}

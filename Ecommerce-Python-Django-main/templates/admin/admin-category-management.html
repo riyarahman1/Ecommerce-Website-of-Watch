@@ -1,0 +1,85 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories</h2>
+                </div>
+                <div>
+                    <a href="{% url 'admin_add_category' %}" class="btn btn-primary btn-sm rounded ml-10">Add Category</a>
+                    <a href="{% url 'admin_add_sub_category' %}" class="btn btn-primary btn-sm rounded ml-10">Add Subcategory</a>
+                </div>
+            </div>
+            <div class="card mb-4">
+                
+                <div class="card-body">
+                    {% for c in category %}
+                    <article class="">
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 col-sm-3 col-8 flex-grow-1 col-name">
+                                <div class="info itemside">
+                                    <h4 class="mb-0">{{c.name}}</h4>
+                                </div>    
+                            </div>
+                        </div> 
+                        <div class="row align-items-center">
+                            <div class="col-lg-3 col-sm-3 col-8 flex-grow-1 col-name">
+                                {% for sc in sub_category %}
+                                {% if sc.category|stringformat:'s' == c.name|stringformat:'s' %}
+                                <a class="itemside" href="{% url 'admin_edit_sub_category' sc.id %}">
+                                    <span style="display: inline-block;margin-left: 40px;"></span><li style="color:#495057;" class="mb-0 info">{{sc.name}}</li>
+                                </a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="col-lg-3 col-sm-4 col-4 col-action text-end ">
+                                <a href="{% url 'admin_edit_category' c.id %}" class="btn btn-sm font-sm mr-5 mb-5 rounded btn-brand">
+                                    <i class="material-icons md-edit"></i> Edit Category
+                                </a>
+                                <a onclick="delete_category({{c.id}},'{{c.name}}')" class="btn btn-sm font-sm mr-5 btn-light rounded">
+                                    <i class="material-icons md-delete_forever"></i> Delete
+                                </a>
+                            </div>
+                        </div> 
+                        <hr>
+                    </article> 
+                    {% endfor %}
+                </div> 
+            </div>
+            {% if messages %}
+                <div class="messages row justify-content-center text-center">
+                    {% for message in messages %}
+                    <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section> 
+    </main>
+
+    <script>
+        function delete_category(id,name){
+            swal({
+                title: "Confirm Delete " + name,
+                text: "All Subcategories and Products under "+name+" will be deleted.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  swal(name + " Deleted", {
+                    icon: "success",  
+                  }).then(()=>{ window.location.href = "admin_delete_category/"+id
+                })
+                } else {
+                    swal(name + " not Deleted", {icon: "error"});
+                }
+              });
+            }
+
+    </script>
+
+{% endblock %}

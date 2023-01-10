@@ -1,0 +1,259 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+    <section class="pt-70 pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 m-auto">
+                    <div class="content-header">
+                        <div class="row">
+                        <div class="col-9">
+                            <h2 class="content-title card-title">Order detail</h2>
+                            <p class="ml-5">Details for Order ID: #{{order.id}}</p>
+                        </div>
+                        {% if order.status == 'Delivered' %}
+                        <div class="col-3 text-end mt-20 my-auto">
+                        <a class="btn-sm btn-secondary" href="{% url 'invoice' order.id%}"><i class="text-light material-icons">download</i></i></a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                    <div class="card mt-30">
+                        <header class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                                    <span>
+                                        <i class="material-icons">calendar_today</i> <b>{{order.date}}</b>
+                                    </span> <br>
+                                    <small class="text-muted">Order ID: #{{order.id}}</small>
+                                </div>
+                                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                                    {% if order.status != 'Cancelled' and order.status != 'Returned' %}
+                                        <p style="font-size:1.2em;"
+                                        class="mr-20 badge rounded-pill alert-success text-success">Order
+                                        {{order.status}}</p>
+                                    {% elif order.status == 'Returned' %}
+                                        <p style="font-size:1.2em;"
+                                        class="mt-5 badge rounded-pill alert-warning text-warning">Order
+                                        {{order.status}}<br><p class="text-warning" style="font-size:1em;">{{order.reason}}</p></p>
+                                        
+                                    {% else %}
+                                        <p style="font-size:1.2em;"
+                                        class="mt-5 badge rounded-pill alert-danger text-danger">Order
+                                        {{order.status}}<br><p class="text-danger" style="font-size:1em;">{{order.reason}}</p></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </header> <!-- card-header end// -->
+                        <div class="card-body">
+                            <div class="row mb-50 mt-20 order-info-wrap">
+                                <div class="col-md-4">
+                                    <article class="icontext align-items-start">
+                                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                                            <i class="text-primary material-icons ">person</i>
+                                        </span>
+                                        <div class="text">
+                                            <h6 class="mb-1">Customer</h6>
+                                            <p class="mb-1">
+                                                {{order.user.first_name}}&nbsp;{{order.user.last_name}}<br>{{order.user.email}}<br>{{order.user.phone_number}}
+                                            </p>
+                                        </div>
+                                    </article>
+                                </div> <!-- col// -->
+                                <div class="col-md-4">
+                                    <article class="icontext align-items-start">
+                                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                                            <i class="text-primary material-icons">local_shipping</i>
+                                        </span>
+                                        <div class="text">
+                                            <h6 class="mb-1">Order info</h6>
+                                            <p class="mb-1">
+                                                Shipping: Monke Shipping <br> Pay method: {{order.payment.method}} <br>
+                                                Status:
+                                                {{order.status}}
+                                            </p>
+                                        </div>
+                                    </article>
+                                </div> <!-- col// -->
+                                <div class="col-md-4">
+                                    <article class="icontext align-items-start">
+                                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                                            <i class="text-primary material-icons">place</i>
+                                        </span>
+                                        <div class="text">
+                                            <h6 class="mb-1">Deliver to</h6>
+                                            <p>{{order.address.first_name}}&nbsp;{{order.address.last_name}}&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{order.address.phone_number}}&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{order.address.email}}
+                                            </p>
+                                            <p>{{order.address.address}}&nbsp;{{order.address.town}},&nbsp;{{order.address.state}}&nbsp;-&nbsp;{{order.address.pincode}}
+                                            </p>
+                                        </div>
+                                    </article>
+                                </div> <!-- col// -->
+                            </div> <!-- row // -->
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="table-responsive">
+                                        <table style="border-collapse: collapse;
+                                            border-radius: 0.25em;
+                                            overflow: hidden;" class="table p-20">
+                                            <thead>
+                                                <tr>
+                                                    <th width="40%">Product</th>
+                                                    <th width="20%">Unit Price</th>
+                                                    <th width="20%">Quantity</th>
+                                                    <th width="20%" class="text-end">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="p-20">
+                                                {% for oi in order_items %}
+                                                <tr class="p-20">
+                                                    <td>
+                                                        <a class="itemside" href="#">
+                                                            <div class="left">
+                                                                <img src="{{ oi.product.image1.url }}" width="40"
+                                                                    height="40" class="img-xs" alt="Item">
+                                                            </div>
+                                                            <div class="info">{{ oi.product.name }}</div>
+                                                        </a>
+                                                    </td>
+                                                    <td> ₹{{ oi.product.price }} </td>
+                                                    <td>{{ oi.quantity }}</td>
+                                                    <td class="text-end"> ₹{{ oi.subtotal }} </td>
+                                                </tr>
+                                                {% endfor %}
+                                                <tr class="">
+                                                    <td colspan="4">
+                                                        <article class="float-end mt-10 mr-10">
+                                                            <dl class="dlist">
+                                                                <dt>Subtotal : ₹{{order.payment.amount}}</dt>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt>Shipping cost : Free Shipping</dt>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt>Grand total : <b
+                                                                        class="h5">₹{{order.payment.amount}}</b></dt>
+                                                            </dl>
+                                                            <dl class="dlist">
+                                                                <dt class="text-muted">Payment Method : <span
+                                                                        class="badge rounded-pill alert-success text-success">{{order.payment.method}}</span>
+                                                                </dt>
+                                                            </dl>
+                                                        </article>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div> <!-- table-responsive// -->
+                                </div> <!-- col// -->
+                                <div class="col-lg-1"></div>
+                                <div class=" col-lg-4">
+                                    <div class="card box shadow-sm bg-light p-20">
+                                        <h6 class="mb-15">Payment info</h6>
+                                        {% if order.payment.method == 'COD' %}
+                                        <p>Cash On Delivery</p>
+                                        {% elif order.payment.method == 'RZP' %}
+                                        <p>Payment Through Razor Pay</p>
+                                        {% elif order.payment.method == 'PYP' %}
+                                        <p>Payment Through Paypal</p>
+                                        {% endif %}
+                                        <p>Amount : ₹{{order.payment.amount}}</p>
+                                        <p>Status : {{order.payment.status}}</p>
+                                    </div>
+                                    <form action="{% url 'user_order_cancel_return' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mt-20">
+                                            {% if order.status != 'Out for Delivery' and order.status != 'Cancelled' and order.status != 'Returned' and order.status != 'Delivered' %}
+                                            <select class="mb-10 mt-40 form-select" name="reasonCancel">
+                                                <option disabled selected> Reason for Cancellation </option>
+                                                <option>Change in delivery address.</option>
+                                                <option>Product is not required anymore.</option>
+                                                <option>Product is taking too long to be delivered.</option>
+                                                <option>Recipient not available at the estimated day of delivery.</option>
+                                            </select>
+                                            <div style="text-align: center;" class="w-100">
+                                                <button onclick="cancelOrder()" type="submit" class="btn btn-outline-primary">Cancel</button>
+                                            </div>
+                                            {% elif order.status != 'Returned' and order.status != 'Cancelled' %}
+                                            <select class="mb-10 mt-40 form-select" name="reasonReturn">
+                                                <option disabled selected> Reason for Return </option>
+                                                <option>Color, size or fit isn’t right.</option>
+                                                <option>Product is fake, used or expired.</option>
+                                                <option>Product/packaging is damaged or defective.</option>
+                                                <option>Product isn’t matching with the product description.</option>
+                                            </select>
+                                            <div style="text-align: center;" class="w-100">
+                                                <button onclick="returnOrder()" type="submit" class="btn btn-outline-primary">Return</button>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <input type="hidden" id="orderId" name="order_id" value="{{order.id}}">
+                                        <input type="hidden" id="returnOrCancel" name="roc" value="">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+    function openAddressForm() {
+        document.getElementById("cancelButtonAddAddress").style.display = "inline-block";
+        document.getElementById("addressForm").style.display = "block";
+    }
+
+    function closeAddressForm() {
+        document.getElementById("addressForm").style.display = "none";
+        document.getElementById("cancelButtonAddAddress").style.display = "none";
+    }
+
+
+    function openEditAddressForm(id) {
+        document.getElementById(id).style.display = "block";
+        document.getElementById("edit" + id).style.display = "none";
+        document.getElementById("cancel" + id).style.display = "inline";
+    }
+
+    function closeEditAddressForm(id) {
+        document.getElementById(id).style.display = "none";
+        document.getElementById("edit" + id).style.display = "inline";
+        document.getElementById("cancel" + id).style.display = "none";
+    }
+
+    function returnOrder(){
+        document.getElementById("returnOrCancel").value= "return";
+    }
+
+    function cancelOrder(){
+        document.getElementById("returnOrCancel").value= "cancel";
+    }
+
+
+    function delete_address(id) {
+        swal({
+            title: "Confirm Delete Address",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal(name + " Deleted", {
+                        icon: "success",
+                    }).then(() => {
+                        window.location.href = "user_delete_address/" + id
+                    })
+                } else {
+                    swal("Address Not Deleted", { icon: "error" });
+                }
+            });
+    }
+
+</script>
+{% endblock %}

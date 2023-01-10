@@ -1,0 +1,71 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+        <section class="content-main">
+            <div class="row">
+                <form action="{% url 'admin_edit_sub_category' sub_category.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mt-40 justify-content-center">
+                <div class="col-12">
+                <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content-header">
+                        <h2 class="content-title ml-5">Subcategory</h2>
+                    </div>
+                    <div class="card mb-4">
+                        
+                        <div class="card-body align-item-end">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Name" value='{{sub_category.name}}'>
+                                </div>
+                                <div class="">
+                                    <a onclick="delete_sub_category({{sub_category.id}},'{{subcategory.name}}')" class="btn btn-outline-danger  rounded font-sm hover-up mr-5">Delete Subcategory</a>
+                                    <button type="submit" class="btn btn-md rounded font-sm hover-up mr-5 align-item-end">Save Subcategory</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            
+            </form>
+            </div>
+            {% if messages %}
+                <div class="messages row justify-content-center text-center">
+                    {% for message in messages %}
+                    <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        function delete_sub_category(id,name){
+            swal({
+                title: "Confirm Delete " + name,
+                text: "Subcategory and the Products under "+name+" will be deleted.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  swal(name + " Deleted", {
+                    icon: "success",  
+                  }).then(()=>{ window.location.href = "admin_delete_sub_category/"+id
+                })
+                } else {
+                    swal(name + " not Deleted", {icon: "error"});
+                }
+              });
+            }
+
+    </script>
+
+{% endblock %}

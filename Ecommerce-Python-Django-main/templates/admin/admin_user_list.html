@@ -1,0 +1,206 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Users</h2>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <form action="{% url 'admin_user_list' %}" method="post">
+                        {% csrf_token %}
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6">
+                                <input type="text" placeholder="Search" name="search" class="form-control">
+                            </div>
+                            <div class="col-lg-4 col-md-6 mt-5">
+                                <button type="submit"
+                                    class="btn btn-md rounded font-sm hover-up mr-5 align-item-end">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </header>
+                <div class="card-body">
+                    <article class="itemlist">
+                        <div class="row align-items-center">
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">#</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">First Name</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">Last Name</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">Username</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">Email</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">Phone Number</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">Active Status</h6>
+                                    </div>
+                                </a>
+                            </div>
+                        </div> <!-- row .// -->
+                    </article> <!-- itemlist  .// -->
+                    {% for o in obj %}
+                    <article class="itemlist">
+                        {% csrf_token %}
+                        <div class="row align-items-center">
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0" name="id">{{ o.id }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">{{ o.first_name }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">{{ o.last_name }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">{{ o.username }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">{{ o.email }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info">
+                                        <h6 class="mb-0">{{ o.phone_number }}</h6>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-lg-1 col-sm-1 col-1 flex-grow-1 col-name">
+                                <a class="itemside" href="#">
+                                    <div class="info text-center">
+                                        {% if o.is_active %}
+                                            
+                                            <a onclick="block({{o.id}},'{{o.first_name}}')" class="btn btn-md rounded font-sm">Block User</a>
+                                        {% else %}
+                                            <a onclick="unblock({{o.id}},'{{o.first_name}}')" class="btn btn-md rounded font-sm">Unblock User</a>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </div>
+                        </div> <!-- row .// -->
+                    </article>
+                    {% endfor %}
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <div class="pagination-area mt-30 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        {% if obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page={{ obj.previous_page_number }}"><i class="material-icons md-chevron_left"></i></a></li>
+                        {% endif %}
+                        {% if obj.has_next %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ obj.number }}</a></li>
+                        <li class="page-item"><a class="page-link dot">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">{{ obj.paginator.num_pages }}</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ obj.next_page_number }}"><i class="material-icons md-chevron_right"></i></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </section> 
+    </main>
+    
+
+    <script>
+        function block(id,first_name){
+            swal({
+                title: "Confirm Block " + first_name,
+                text: "",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+              })
+              .then((willDelete) => {
+                if (willDelete) {
+                  swal(first_name + " Blocked", {
+                    icon: "success",  
+                  }).then(()=>{ window.location.href = "block_unblock_user/"+id
+                })
+                } else {
+                    swal(first_name + " not Blocked", {icon: "error"});
+                }
+              });
+            }
+
+            function unblock(id,first_name){
+                swal({
+                    title: "Confirm Unblock " + first_name,
+                    text: "",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                  })
+                  .then((willDelete) => {
+                    if (willDelete) {
+                      swal(first_name + " Unblocked", {
+                        icon: "success",  
+                      }).then(()=>{ window.location.href = "block_unblock_user/"+id
+                    })
+                    } else {
+                      swal(first_name + " not Unblocked", {icon: "error"});
+                    }
+                  });
+                }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,317 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <form action="{% url 'order_confirmation' %}" method="POST" id="mainForm" name="enq">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-25">
+                            {% if request.session.email == 'guest@gmail.com' %}
+                            <h4>Enter Address</h4>
+                            {% else %}
+                            <h4>Select Address</h4>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            {% for a in addresses %}
+                            <div class="col-lg-12 mb-30">
+                                <div class="card mb-3 mb-lg-0">
+                                    <div class="card-header">
+                                        <div class="form-check">
+                                            <input class="form-check-input addressRadio" type="radio"
+                                                name="flexRadioDefault" value="{{a.id}}" onclick="closeDiffAddressForm()">
+                                            <h5 style="height:1em;" class="mb-0">{{a.type}}</h5>
+                                        </div>                                            
+                                    </div>
+                                    <div class="card-body">
+                                        <p>{{a.first_name}}&nbsp;{{a.last_name}}&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{a.phone_number}}&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{a.email}}
+                                        </p>
+                                        <p>{{a.address}}&nbsp;{{a.town}},&nbsp;{{a.state}}&nbsp;-&nbsp;{{a.pincode}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="ship_detail">
+                            {% if not request.session.email == 'guest@gmail.com' %}
+                            <div class="form-group">
+                                <div class="chek-form">
+                                    <div class="custome-checkbox">
+                                        <input class="form-check-input" type="checkbox" name="checkbox"
+                                            id="differentaddress" onclick="selectDiffAddress()">
+                                        <label class="form-check-label label_info" data-bs-toggle="collapse"
+                                            data-target="#collapseAddress" href="#collapseAddress"
+                                            aria-controls="collapseAddress" for="differentaddress"><span>Ship to a
+                                                different address.</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if request.session.email == 'guest@gmail.com' %}
+                            <div style="display:block;" class="row justify-content-center card mt-40"
+                            id="diffAddressForm" disabled>
+                            {% else %}
+                            <div style="display:none;" class="row justify-content-center card mt-40"
+                            id="diffAddressForm" disabled>
+                            {% endif %}
+                                <div class="col-12 card-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>First Name <span class="required">*</span></label>
+                                            <input class="form-control square" name="first_name"
+                                                type="text">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Last Name <span class="required">*</span></label>
+                                            <input class="form-control square" name="last_name">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Phone Number <span class="required">*</span></label>
+                                            <input class="form-control square" name="phone_number"
+                                                type="tel">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Email Address <span class="required">*</span></label>
+                                            <input class="form-control square" name="email" type="email">
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label>Address <span class="required">*</span></label>
+                                            <textarea style="height: auto;" name="address" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Town <span class="required">*</span></label>
+                                            <input class="form-control square" name="town" type="text">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>State <span class="required">*</span></label>
+                                            <input class="form-control square" name="state" type="text">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label>Pin Code <span class="required">*</span></label>
+                                            <input class="form-control square" name="pincode" type="text"
+                                                maxlength="6">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>Address Type <span class="required">*</span></label>
+                                            <select class="form-select square mt-5" name="type">
+                                                <option disabled selected> -- select address type -- </option>
+                                                <option>Home Address</option>
+                                                <option>Office Address</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="order_review">
+                            <div class="mb-20">
+                                <h4>Your Orders</h4>
+                            </div>
+                            <div class="table-responsive order_table text-center">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ci in cart_items %}
+                                        <tr>
+                                            <td class="image product-thumbnail"><img src="{{ ci.product.image1.url }}">
+                                            </td>
+                                            <td>
+                                                <h5><a href="shop-product-full.html">{{ci.product.name}}</a></h5> <span
+                                                    class="product-qty">x {{ci.quantity}}</span>
+                                            </td>
+                                            <td>₹{{ci.product.price}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% if cart.coupon_applied %}
+                                        <tr>
+                                            <th>Cart Subtotal</th>
+                                            <td colspan="2"><span class="font-lg fw-900 text-brand">₹{{cart_total|floatformat:2}}</span></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Coupon Discount</th>
+                                            <td colspan="2"><span style="color:#d64a42;"class="font-lg fw-900">-₹{{cart_discount|floatformat:2}}</span></strong></td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td colspan="2"><em>Free Shipping</em></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td colspan="2" class="product-subtotal">
+                                                {% if cart.coupon_applied %}
+                                                <span class="font-xl text-brand fw-900">₹{{cart_total_discount}}</span>
+                                                {% else %}
+                                                <span class="font-xl text-brand fw-900">₹{{cart_total}}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                            <div id="payment_section" hidden>
+                            <div class="payment_method">
+                                <div class="mb-25">
+                                    <h5>Payment</h5>
+                                </div>
+                                <div class="payment_option">
+                                    <div class="custome-radio">
+                                        <input onclick="checkPaymentSeleted()" class="form-check-input" required="" type="radio" name="payment_option"
+                                            id="exampleRadios3" value="COD" checked="">
+                                        <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse"
+                                            data-target="#cod" aria-controls="cod">Cash On Delivery</label>
+                                    </div>
+                                    <div class="custome-radio">
+                                        <input onclick="checkPaymentSeleted()" class="form-check-input" required="" type="radio" name="payment_option"
+                                            id="exampleRadios4" value="PYP" checked="">
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse"
+                                            data-target="#paypal" aria-controls="paypal">Paypal</label>
+                                    </div>
+                                    <div class="custome-radio">
+                                        <input onclick="checkPaymentSeleted()" class="form-check-input" required="" type="radio" name="payment_option"
+                                            id="exampleRadios5" value="RZP" checked="">
+                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse"
+                                            data-target="#razorpay" aria-controls="razorpay">Razor Pay</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group text-center">
+                                <button style="display:inline-block;" id="rzp-button1" class="btn btn-primary btn-sm rounded">Pay Using Razorpay</button>
+                                <button style="display:none;" id="cod-button1" type="submit" class="btn btn-primary btn-sm rounded">Place Order</button>
+                                <div style="display:none;" id="paypal-button-container"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+<script src="https://www.paypal.com/sdk/js?client-id=AR_hBt2pmF9C3b9qutg7b9uInpwFsjtV-__Jonz83JhBMBk8qb958zK6ylR743q3voJLKGRjDvmivyJT&currency=USD"></script>
+<script>
+    paypal.Buttons({
+      // Sets up the transaction when a payment button is clicked
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '77.44' // Can also reference a variable or function
+            }
+          }]
+        });
+      },
+      // Finalize the transaction after payer approval
+      onApprove: (data, actions) => {
+        return actions.order.capture().then(function(orderData) {
+          // Successful capture! For dev/demo purposes:
+          console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+          document.getElementById("mainForm").submit();
+          
+        });
+      }
+    }).render('#paypal-button-container');
+  </script>
+<script>
+    function selectDiffAddress() {
+        if(document.getElementById('payment_section').hidden == true){
+            document.getElementById('payment_section').removeAttribute("hidden")
+        }
+        if (document.getElementById('differentaddress').checked) {
+            document.getElementById("diffAddressForm").style.display = "block";
+            var elements = document.getElementsByClassName('addressRadio');
+            Array.prototype.forEach.call(elements, function (element) {
+                element.checked = false;
+            });
+        }
+        else {
+            document.getElementById("diffAddressForm").style.display = "none";
+        }
+    }
+
+    function closeDiffAddressForm() {
+        if(document.getElementById('payment_section').hidden == true){
+            document.getElementById('payment_section').removeAttribute("hidden")
+        }
+        document.getElementById("diffAddressForm").style.display = "none";
+        document.getElementById('differentaddress').checked = false;
+    }
+
+
+    function checkPaymentSeleted() {
+        if (document.getElementById('exampleRadios3').checked){
+            document.getElementById('cod-button1').style.display = "inline-block"
+            document.getElementById('rzp-button1').style.display = "none"
+            document.getElementById('paypal-button-container').style.display = "none"
+        }
+        else if(document.getElementById('exampleRadios4').checked){
+            document.getElementById('paypal-button-container').style.display = "inline-block"
+            document.getElementById('cod-button1').style.display = "none"
+            document.getElementById('rzp-button1').style.display = "none"
+        }
+        else if(document.getElementById('exampleRadios5').checked){
+            document.getElementById('rzp-button1').style.display = "inline-block"
+            document.getElementById('cod-button1').style.display = "none"
+            document.getElementById('paypal-button-container').style.display = "none"
+        }
+    }
+
+</script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "rzp_test_Si1hgsb3b6rUkY", // Enter the Key ID generated from the Dashboard
+        "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Watch",
+        "description": "Purchase",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+
+            document.getElementById("mainForm").submit();
+            //alert(response.razorpay_payment_id);
+            //alert(response.razorpay_order_id);
+            //alert(response.razorpay_signature)
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
+    
+{% endblock %}

@@ -1,0 +1,366 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <title>Watches</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "user/assets/imgs/theme/favicon.svg"%}">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static "user/assets/css/main.css"%}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="row mt-35" style="width:100%;position:absolute;top:0;z-index:9;">
+    <div class="search-style-1 col-6 d-flex justify-content-center" style="width:100%;">
+        <form id="search-form" autocomplete="off">
+            {% csrf_token %}
+            <input type="text" id="search-input" placeholder="Search For Products" onfocusout="clearSearch()">
+            <div class="mt-10 card" style="display:none;box-shadow:0 3px 3px 0 rgba(0,0,0,0.05);transition:0.5s;border-radius:7px;padding: 15px 15px;" id="results-box" > 
+            </div>
+        </form>
+    </div>
+    </div>
+    <header class="header-area header-style-4 header-height-2">
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1" style="z-index:15;">
+                        <a href="/"><img src="{% static "user/assets/imgs/theme/watch.svg"%}" alt="logo"></a>
+                    </div>
+                    <div class="header-right justify-content-end">
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                
+                                <div class="header-action-icon-2" style="z-index:15;">
+                                    <a class="mini-cart-icon" href="{% url 'cart_view' %}">
+                                        <img alt="Cart" src="{% static "user/assets/imgs/theme/icons/icon-cart.svg"%}">
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2" style="z-index:15;">
+                                    <a class="mini-cart-icon" href="{% url 'user_login'%}">
+                                        <img alt="Profile" src="{% static "user/assets/imgs/theme/icons/icon-profile.svg"%}">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="{% url 'index' %}"><img src="{% static "user/assets/imgs/theme/logo.svg"%}" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li>
+                                        <a class="active" href="{% url 'index' %}">Home</a>
+                                    </li>
+                                    {% for c in category %}
+                                    <li><a href="{% url 'product_list' c.name 'None' 'relevance' '0' '10000'%}">{{c.name}}<i class="fi-rs-angle-down"></i></a>
+                                        <ul class="sub-menu">
+                                            {% for sc in sub_category %}
+                                            {% if sc.category|stringformat:'s' == c.name|stringformat:'s' %}
+                                            <li><a href="{% url 'product_list' c.name sc.name 'relevance' '0' '10000'%}">{{sc.name}}</a></li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+            
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="{% url 'cart_view' %}">
+                                    <img src="{% static "user/assets/imgs/theme/icons/icon-cart.svg"%}">
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="page-account.html">
+                                    <img alt="Evara" src="{% static "user/assets/imgs/theme/icons/icon-profile.svg"%}">
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="{% url 'index' %}"><img src="{% static "user/assets/imgs/theme/logo.svg"%}" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="#">
+                        <input type="text" placeholder="Search for items…">
+                        <button type="submit"><i class="fi-rs-search"></i></button>
+                    </form>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-border">
+                    
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children">
+                                <a href="{% url 'index' %}">Home</a>
+                            </li>
+                            {% for c in category %}
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                    href="{% url 'product_list' c.name 'None' 'relevance' '0' '10000'%}">{{c.name}}</a>
+                                <ul class="dropdown">
+                                    {% for sc in sub_category %}
+                                    {% if sc.category|stringformat:'s' == c.name|stringformat:'s' %}
+                                    <li><a href="{% url 'product_list' c.name sc.name 'relevance' '0' '10000'%}">{{sc.name}}</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% block content %}
+
+
+{% endblock %}
+
+
+<footer class="main">
+    <hr>
+    <section class="section-padding footer-mid">
+        <div class="container pt-15 pb-20">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="widget-about font-md mb-md-5 mb-lg-0">
+                        <div class="logo logo-width-1 wow fadeIn animated">
+                            <a href="/"><img src="{% static "user/assets/imgs/theme/logo.svg"%}" alt="logo"></a>
+                        </div>
+                        <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Reach out to us</h5>
+                        <p class="wow fadeIn animated">
+                            <strong>Email: </strong>hello@urbanmonkey.com</p>
+                        <p class="wow fadeIn animated">
+                            <strong>Phone: </strong>+91 8606 665959 / +91 9656 228989  
+                        </p>
+                        <p class="wow fadeIn animated">
+                            <strong>Timing: </strong>11am to 6pm Mon - Sun</p>
+                        <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                        <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                            <a href="#"><img src="{% static "user/assets/imgs/theme/icons/icon-facebook.svg"%}" alt=""></a>
+                            <a href="#"><img src="{% static "user/assets/imgs/theme/icons/icon-twitter.svg"%}" alt=""></a>
+                            <a href="#"><img src="{% static "user/assets/imgs/theme/icons/icon-instagram.svg"%}" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <h5 class="widget-title wow fadeIn animated">About</h5>
+                    <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Delivery Information</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms &amp; Conditions</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2  col-md-3">
+                    <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                    <ul class="footer-list wow fadeIn animated">
+                        <li><a href="#">Sign In</a></li>
+                        <li><a href="#">View Cart</a></li>
+                        <li><a href="#">My Wishlist</a></li>
+                        <li><a href="#">Track My Order</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Order</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="widget-title wow fadeIn animated">Secured Payment Gateways</h5>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                            <img class="wow fadeIn animated" src="{% static "user/assets/imgs/theme/payment-method.png"%}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container pb-20 wow fadeIn animated">
+        <div class="row">
+            <div class="col-12 mb-20">
+                <div class="footer-bottom"></div>
+            </div>
+            <div class="col-lg-6">
+                <p class="float-md-left font-sm text-muted mb-0">&copy; 2022, <strong
+                        class="text-brand">Urban Monkey</strong>  </p>
+            </div>
+            <div class="col-lg-6">
+                <p class="text-lg-end text-start font-sm text-muted mb-0">
+                    Headwear, T-shirts, Sunglasses, Wallets, Face Masks, Caps, Skateboards.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <script>
+        const url              = window.location.href
+        const searchForm       = document.getElementById('search-form')
+        const searchInput      = document.getElementById('search-input')
+        const resultsBox       = document.getElementById('results-box')
+        const searchResultName = document.getElementById('searchResultName')
+
+
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value
+
+        const sendSearchData = (keyword) =>{
+            $.ajax({
+                type: 'POST',
+                url: 'search/',
+                data: {
+                    'csrfmiddlewaretoken' : csrf,
+                    'keyword' : keyword,
+                },
+                success: (res)=> {
+                    //console.log(res.data)
+                    const data = res.data
+                    if (Array.isArray(data)){
+                        resultsBox.innerHTML = ""
+                        data.forEach(product=>{
+                            resultsBox.innerHTML += `
+                            <div class="card-body row">
+                                <img class="col-3" src="${product.image}">
+                                <a onclick="productView(${product.id})" id="searchResultName" style="font-size:16px;font-weight:700;" class="col-8"><b>${product.name}</b></a>
+                            </div>`
+                        })
+                    } else{
+                        if (searchInput.value.length > 0){
+                            document.getElementById('results-box').style.display = "block"
+                            resultsBox.innerHTML = ""
+                            resultsBox.innerHTML += `
+                            <div class="card-body row">
+                                <img class="col-3" src="">
+                                <a id="searchResultName" style="font-size:16px;font-weight:700;" class="col-8 ml-80"><b>${data}</b></a>
+                            </div>`
+                        } else{
+                            document.getElementById('results-box').style.display = "none"
+                            resultsBox.innerHTML = ""
+                        }
+                    }
+                },
+                error: (err)=>{
+                    console.log(err)
+                }
+            })
+        }
+
+
+        searchInput.addEventListener('keyup',e=>{
+
+
+            if(document.getElementById('results-box').style.display=="none"){
+                document.getElementById('results-box').style.display = "block"
+            }
+
+            sendSearchData(e.target.value)
+
+        })
+
+        function productView(id) {
+            location.href = "product/product_view/" + id
+        }
+
+        function delay(time) {
+            return new Promise(resolve => setTimeout(resolve, time));
+          }
+          
+        delay(500).then(() => {
+            resultsBox.innerHTML = ""
+            document.getElementById('search-input').value = ''
+            document.getElementById('results-box').style.display = "none"
+        })
+
+        function clearSearch() {
+             delay(500)       
+        }
+    </script>
+
+    <script src="{% static "user/assets/js/vendor/modernizr-3.6.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/jquery-3.6.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/jquery-migrate-3.3.0.min.js"%}"></script>
+    <script src="{% static "user/assets/js/vendor/bootstrap.bundle.min.js"%}"></script>
+
+    <script src="{% static "user/assets/js/plugins/slick.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/wow.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery-ui.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/perfect-scrollbar.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/magnific-popup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/select2.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/waypoints.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/counterup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/images-loaded.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/isotope.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/scrollup.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/leaflet.js"%}"></script>
+    
+    <script src="{% static "user/assets/js/plugins/jquery.syotimer.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.countdown.min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.vticker-min.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.theia.sticky.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery.elevatezoom.js"%}"></script>
+    <script src="{% static "user/assets/js/plugins/jquery-ui.js"%}"></script>
+
+    <script src="{% static "user/assets/js/main.js"%}"></script>
+    <script src="{% static "user/assets/js/shop.js"%}"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>  
+
+    
+    
+</body>
+</html>

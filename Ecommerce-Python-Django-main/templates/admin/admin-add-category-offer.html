@@ -1,0 +1,58 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    
+                </div>
+                <form action="{% url 'admin_add_category_offer' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mt-40">
+                <div class="col-12">
+                <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content-header">
+                        <h2 class="content-title ml-5">Add Category Offer</h2>
+                    </div>
+                    <div class="card mb-4">
+                        
+                        <div class="card-body align-item-end">
+                                <div class="mb-4">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" name="category">
+                                        <option disabled selected> -- select category -- </option>
+                                            {% for c in category %}
+                                            <option>{{c.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Discount Percentage</label>
+                                    <input type="number" class="form-control" name="discount" placeholder="Discount Percentage">
+                                </div>
+                                <div class="align-item-end mt-15">
+                                    <button type="submit" class="btn btn-md rounded font-sm hover-up mr-5">Save Offer</button>
+                                </div>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+            </div>
+            </div>
+            </form>
+            </div>
+            {% if messages %}
+                <div class="messages row justify-content-center text-center">
+                    {% for message in messages %}
+                    <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+{% endblock %}

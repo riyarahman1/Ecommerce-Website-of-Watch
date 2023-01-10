@@ -1,0 +1,137 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main">
+        <div class="page-header mt-30">
+            <div class="container">
+                <h2>{{title}}</h2>
+            </div>
+        </div>
+        <section class="mt-30 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a class="shop-filter-toogle" href="#">
+                            <div style="padding:7px;border-radius:5px;width:110px;color:#ffff;background-color:#088178;">
+                            <span class="fi-rs-filter ml-5 mr-5"></span>
+                            Filters
+                            <i class="fi-rs-angle-small-down angle-up"></i>
+                            <i class="fi-rs-angle-small-up angle-down"></i>
+                            </div>
+                        </a>
+                        <div class="shop-product-fillter-header collapse">
+                            <div class="row justify-content-center">
+                                {% for c in category %}
+                                <div class="col-lg-2 col-md-4 mb-lg-0 mb-md-5 mb-sm-5">
+                                    <a href="{% url 'product_list' c.name 'None' 'relevance' '0' '10000'%}"><h5 class="mb-20">{{c.name}}</h5></a>
+                                    <ul class="categor-list">
+                                        {% for sc in sub_category %}
+                                        {% if sc.category|stringformat:'s' == c.name|stringformat:'s' %}
+                                        <li class="cat-item text-muted"><a href="{% url 'product_list' c.name sc.name 'relevance' '0' '10000'%}">{{sc.name}}</a>
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endfor %}
+                                <div class="col-lg-2 col-md-4 mb-lg-0 mb-md-5 mb-sm-5">
+                                        <a ><h5 class="p-0 mb-20">Price Range</h5></a>
+                                        <form action="{% url 'product_list' currentCat currentSubcat 'relevance' '0' '10000'%}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="row">
+
+                                                <div class="col-6">
+                                                    <span class="prefix text-start">₹</span>
+                                                    <input name="min" class="has-prefix text-center" onKeyDown="return false" type="number" value="{{min}}" min="0" max="10000" step="500">
+                                                </div>
+                                                <div class="col-6">
+                                                    <span class="prefix">₹</span>
+                                                    <input name="max" class="has-prefix text-center" onKeyDown="return false" type="number" value="{{max}}" min="0" max="10000" step="500">
+                                                </div>
+
+                                                <button type="submit" class="col-5 mt-20 btn btn-sm ml-0 pl-0">Go</button>
+                                            </div>
+                                        </form>
+                                </div>
+                                <div class="col-lg-2 col-md-4 mb-lg-0 mb-md-5 mb-sm-5">
+                                    <a ><h5 class="mb-20">Sort By</h5></a>
+                                    <ul class="categor-list">
+                                        
+                                        <li class="cat-item text-muted"><a href="{% url 'product_list' currentCat currentSubcat 'relevance' min max%}">Relevance</a></li>
+                                        <li class="cat-item text-muted"><a href="{% url 'product_list' currentCat currentSubcat 'newest' min max%}">Newest Arrivals</a></li>
+                                        <li class="cat-item text-muted"><a href="{% url 'product_list' currentCat currentSubcat 'lowtohigh' min max%}">Price : Low to High</a></li>
+                                        <li class="cat-item text-muted"><a href="{% url 'product_list' currentCat currentSubcat 'hightolow' min max%}">Price : High to Low</a></li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row product-grid-3">
+                            {% for i in products %}
+                            <div class="col-lg-4 col-md-4">
+                                <div class="product-cart-wrap mb-30">
+                                    <div class="product-img-action-wrap">
+                                        <div class="product-img product-img-zoom">
+                                            <a href="{% url 'product_view' i.id %}">
+                                                <img class="default-img" src="{{ i.image1.url }}" alt="">
+                                                <img class="hover-img" src="{{ i.image2.url }}" alt="">
+                                            </a>
+                                        </div>
+                                        {% if i.is_featured %}
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="hot">Featured</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-content-wrap">
+                                        <div class="product-category">
+                                            <a href="shop-grid-right.html">{{i.sub_category}}</a>
+                                        </div>
+                                        <h2><a href="{% url 'product_view' i.id %}">{{i.name}}</a></h2>
+                                        <div class="product-price">
+                                            <span>₹{{i.discount_price}}</span>
+                                            {% if i.discount_price < i.price %}
+                                            <span class="old-price">₹{{i.price}}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <!--pagination-->
+                            <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-start">
+                                        {% if products.has_previous %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}"><i class="fi-rs-angle-double-small-left"></i></a></li>
+                                        {% endif %}
+                                        <li class="page-item active"><a class="page-link" href="#">{{ products.number }}</a></li>
+                                        {% if products.has_next %}
+                                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">{{ products.paginator.num_pages }}</a></li>
+                                        <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}"><i class="fi-rs-angle-double-small-right"></i></a></li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </main>
+    <style>
+        .prefix {
+            position: relative;
+            right: -3px;
+            color: grey;
+          }
+          
+          input.has-prefix {
+            padding-left: 20px;
+            margin-left: -20px;
+          }
+    </style>
+    
+    {% endblock %}

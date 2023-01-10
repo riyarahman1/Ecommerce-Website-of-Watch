@@ -1,0 +1,116 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="mb-30 text-center"><img style="height:4em;width:4em;" src="{% static "user/assets/imgs/confirm.png"%}"></img></p>
+                    <h3 class="mb-30 text-center">Your Order Has Been Placed</h3>
+                    <div class="order_review">
+                        <div class="row">
+                        <div class="col-lg-9 mb-30">
+                            <div class="card mb-3 mb-lg-0">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Delivering to : {{order.address.type}}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>{{order.address.first_name}}&nbsp;{{order.address.last_name}}</strong>&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{order.address.phone_number}}&nbsp;&nbsp;&#8231;&nbsp;&nbsp;{{order.address.email}}</p>
+                                    <p>{{order.address.address}}&nbsp;</p>
+                                    <p>{{order.address.town}},&nbsp;{{order.address.state}}&nbsp;-&nbsp;{{order.address.pincode}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 mb-30">
+                            <div class="card mb-3 mb-lg-0">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Invoice : </h5>
+                                </div>
+                                <div class="card-body">
+                                    <p>Order Id : #{{order.id}}</p>
+                                    <p>Order Status : {{order.status}}</p>
+                                    <p>Creation Date : {{order.date}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="table-responsive order_table text-center">
+                            <table class="table shopping-summery text-center clean">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in order_products %}
+                                    <tr>
+                                        <td class="image product-thumbnail"><img src="{{ i.product.image1.url }}"></td>
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name"><a
+                                                    href="{% url 'product_view' i.product.id %}">{{i.product.name}}</a>
+                                            </h5>
+
+                                            <p class="font-xs"><strong>Size : </strong>{{ i.size }}</p>
+                                        </td>
+                                        <td class="price" data-title="Price"><span>₹{{ i.product.price }}</span></td>
+                                        <td class="quantity" data-title="Quantity"><span>{{ i.quantity }}</span></td>
+                                        {% if i.have_size %}
+                                        <td class="quantity" data-title="Quantity"><span>{{ i.size }}</span></td>
+                                        {% else %}
+                                        <td class="quantity" data-title="Quantity"><span>None</span></td>
+                                        {% endif %}
+                                        <td class="quantity" data-title="Quantity"><span>{{ i.subtotal }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr><td colspan="8" class="text-end mr-20 mt-20"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-3">
+                                <h5 style="display:inline-block;">Thanks For Your Order&nbsp;&nbsp;</h5><img style="height:1em;width:1em;display:inline-block;" src="{% static "user/assets/imgs/heart.png"%}"></img>
+                            </div>
+                            <div class="col-3">
+                                <h5 style="display:inline-block;">Total Amount : </h5>
+                                <h3 style="display:inline-block;">₹{{order.total}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-40">
+                        <div class="col-3">
+                            <a href="{% url 'index' %}" class="btn btn-success ">Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<script>
+    function selectDiffAddress() {
+        if (document.getElementById('differentaddress').checked) {
+            document.getElementById("diffAddressForm").style.display = "block";
+            var elements = document.getElementsByClassName('addressRadio');
+            Array.prototype.forEach.call(elements, function (element) {
+                element.checked = false;
+            });
+        }
+        else {
+            document.getElementById("diffAddressForm").style.display = "none";
+        }
+    }
+
+    function closeDiffAddressForm() {
+        document.getElementById("diffAddressForm").style.display = "none";
+        document.getElementById('differentaddress').checked = false;
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,234 @@
+﻿{% extends 'user/user-base.html' %}
+{% load static %}
+{% block content %}
+    <main class="main">
+        <section class="home-slider position-relative mb-30 mt-30">
+            <div class="container">
+                <a href="/">
+                <img class="animated" src="{% static "user/assets/imgs/slider/banner.png"%}" >
+                </a>
+            </div>
+        </section>
+        <section class="banners mb-20">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="banner-img wow fadeIn animated">
+                            <img src="{% static "user/assets/imgs/banner/banner1.png"%}" alt="">
+                            <div class="banner-text" style="margin-left: 122px;">
+                                <span>Watches for Women</span>
+                                <h4>Watches for <br>Women</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="banner-img wow fadeIn animated">
+                            <img src="{% static "user/assets/imgs/banner/banner2.png"%}" alt="">
+                            <div class="banner-text" style="margin-left: 115px;">
+                                <span>Watches for Men</span>
+                                <h4>Watches for <br>Men</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-12">
+                        <div class="tab-header">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab"
+                                        data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one"
+                                        aria-selected="true">Featured</button>
+                                </li>
+                                
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab"
+                                        data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three"
+                                        aria-selected="false">New Arrivals</button>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--End nav-tabs-->
+                        <div class="tab-content wow fadeIn animated" id="myTabContent">
+                            <div class="tab-pane fade show active" id="tab-one" role="tabpanel"
+                                aria-labelledby="tab-one">
+                                <div class="row product-grid-4">
+                                    {% for i in featured %}
+                                    <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                                        <div class="product-cart-wrap mb-30">
+                                            <div class="product-img-action-wrap">
+                                                <div class="product-img product-img-zoom">
+                                                    <a href="{% url 'product_view' i.id %}">
+                                                        <img class="default-img" src="{{ i.image1.url }}"
+                                                            alt="">
+                                                        <img class="hover-img" src="{{ i.image2.url }}">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="product-content-wrap">
+                                                <div class="product-category">
+                                                    <a href="{% url 'product_list' 'None' i.sub_category 'relevance' '0' '10000'%}">{{i.sub_category}}</a>
+                                                </div>
+                                                <h2><a href="shop-product-right.html">{{i.name}}</a></h2>
+                                                
+                                                <div class="product-price">
+                                                    <span>₹{{i.discount_price}}</span>
+                                                    {% if i.discount_price < i.price %}
+                                                    <span class="old-price">₹{{i.price}}</span>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <!--End product-grid-4-->
+                            </div>
+                            <!--En tab one (Featured)-->
+                            
+                            <!--En tab two (Popular)-->
+                            <div class="tab-pane fade" id="tab-three" role="tabpanel" aria-labelledby="tab-three">
+                                <div class="row product-grid-4">
+                                    {% for o in newarrivals %}
+                                    <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                                        <div class="product-cart-wrap mb-30">
+                                            <div class="product-img-action-wrap">
+                                                <div class="product-img product-img-zoom">
+                                                    <a href="{% url 'product_view' o.id %}">
+                                                        <img class="default-img" src="{{ o.image1.url }}">
+                                                        <img class="hover-img" src="{{ o.image2.url }}">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="product-content-wrap">
+                                                <div class="product-category">
+                                                    <a href="{% url 'product_list' 'None' o.sub_category 'relevance' '0' '10000'%}">{{o.sub_category}}</a>
+                                                </div>
+                                                <h2><a href="{% url 'product_view' o.id %}">{{o.name}}</a></h2>
+                                                <div class="product-price">
+                                                    <span>₹{{o.discount_price}}</span>
+                                                    {% if o.discount_price < o.price %}
+                                                    <span class="old-price">₹{{o.price}}</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <!--End product-grid-4-->
+                            </div>
+                            <!--En tab three (New added)-->
+                        </div>
+                        <!--End tab-content-->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="popular-categories section-padding mt-15">
+            <div class="container wow fadeIn animated">
+                <h3 class="section-title mb-20"><span>Brands</span></h3>
+                <div class="carausel-6-columns-cover position-relative">
+                    <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-arrows">
+                    </div>
+                    <div class="carausel-6-columns" id="carausel-6-columns">
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand1.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand2.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand3.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand4.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand5.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                                <img src="{% static "user/assets/imgs/shop/brand6.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                        <div class="card-1">
+                            <figure class=" img-hover-scale overflow-hidden">
+                               <img src="{% static "user/assets/imgs/shop/brand7.jpg"%}"
+                                        alt="">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        
+        <section class="featured section-padding">
+            <div class="container pb-25">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-1.png"%}" alt="">
+                            <h4 class="bg-1">Free Shipping</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-2.png"%}" alt="">
+                            <h4 class="bg-3">Online Order</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-3.png"%}" alt="">
+                            <h4 class="bg-2">Save Money</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-4.png"%}" alt="">
+                            <h4 class="bg-4">Promotions</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-5.png"%}" alt="">
+                            <h4 class="bg-5">Happy Sell</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 mb-md-3 mb-lg-0">
+                        <div class="banner-features wow fadeIn animated hover-up">
+                            <img src="{% static "user/assets/imgs/theme/icons/feature-6.png"%}" alt="">
+                            <h4 class="bg-6">24/7 Support</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    {% endblock %}

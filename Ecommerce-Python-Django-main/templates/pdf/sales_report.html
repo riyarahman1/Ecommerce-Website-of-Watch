@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+</head>
+<style>
+  table, th, td {
+    border:1px solid black;
+    padding: 2px;
+  }
+  * {
+    text-align: center;
+    line-height: 25px;
+    vertical-align: top;
+  }
+  </style>
+  <body>
+  
+  <div>
+  <h2>Sales Report</h2>
+  </div>
+  <table style="width:100%">
+    <tr height="50px">
+      <th>Order Id</th>
+      <th>Billing Name</th>
+      <th>Email</th>
+      <th>Total</th>
+      <th>Payment Status</th>
+      <th>Payment Method</th>
+      <th>Date</th>
+    </tr>
+    {% for o in orders %}
+    <tr height="300px">
+      <td>{{ o.id }}</td>
+      <td><b>{{ o.user.first_name}} {{ o.user.last_name }}</b></td>
+      <td>{{ o.user.email }}</td>
+      <td>Rs . {{ o.total }}</td>
+      <td>{{ o.payment.status }}</td>
+      {% if o.payment.method == 'COD' %}
+      <td>Cash On Delivery</td>
+      {% elif o.payment.method == 'RZP' %}
+      <td>Razor Pay</td>
+      {% else %}
+      <td>PayPal</td>
+      {% endif %}
+      <td>{{ o.date }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
+</html>

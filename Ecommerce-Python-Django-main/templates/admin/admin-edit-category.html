@@ -1,0 +1,51 @@
+{% extends 'admin/admin-base.html' %}
+{% load static %}
+{% block content %}
+
+        <section class="content-main">
+            <div class="row">
+                <form action="{% url 'admin_edit_category' category.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mt-40 justify-content-center">
+                <div class="col-12">
+                <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="content-header">
+                        <h2 class="content-title ml-5">Category</h2>
+                    </div>
+                    <div class="card mb-4">
+                        
+                        <div class="card-body align-item-end">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Name" value='{{category.name}}'>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Description" name ="description" class="form-control" rows="1">{{category.description}}</textarea>
+                                </div>
+                                <div class="">
+                                    <button type="submit" class="btn btn-md rounded font-sm hover-up mr-5">Save Category</button>
+                                </div>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+            </div>
+            </div>
+            </div>
+            
+            </form>
+            </div>
+            {% if messages %}
+                <div class="messages row justify-content-center text-center">
+                    {% for message in messages %}
+                    <div class="alert alert-info {{ message.tags }} col-6" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+{% endblock %}
